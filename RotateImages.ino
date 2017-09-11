@@ -24,6 +24,9 @@ void setup() {
   rotateCCW(inpImg, outImg);
 //  rotateCW(inpImg, outImg);
 //  rotate180(inpImg, outImg);
+
+
+  // Echo out rotated image array ..
   
   for (int x = 2; x< 18; ++x) {
     Serial.print(outImg[x]);
@@ -108,18 +111,3 @@ void rotate180(const uint8_t *a, uint8_t *b) {
 
 }
 
-int main() {
-
-  rotateCW(inpImg, outImg);
-  
-  for (int x = 2; x< 18; ++x) {
-    printf("%d ", outImg[x]);
-  }
-    printf("\n");
-  for (int x = 18; x< 34; ++x) {
-    printf("%d ", outImg[x]);
-  }
-   
-  return 0;
-
-}
