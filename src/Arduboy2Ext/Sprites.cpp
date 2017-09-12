@@ -388,26 +388,16 @@ void Sprites::rotate(bool ccw, const uint8_t *a, uint8_t *b) {
   
     uint8_t y1 =  (ccw ? pgm_read_byte(a[inputIdx]) : reverseBits(pgm_read_byte(a[inputIdx + 16])));
    
-    b[outputIdx] = b[outputIdx] | ((y1 & 1) > 0 ? bit : 0);
-    b[outputIdx + 1] = b[outputIdx + 1] | ((y1 & 2) > 0 ? bit : 0);
-    b[outputIdx + 2] = b[outputIdx + 2] | ((y1 & 4) > 0 ? bit : 0);
-    b[outputIdx + 3] = b[outputIdx + 3] | ((y1 & 8) > 0 ? bit : 0);
-    b[outputIdx + 4] = b[outputIdx + 4] | ((y1 & 16) > 0 ? bit : 0);
-    b[outputIdx + 5] = b[outputIdx + 5] | ((y1 & 32) > 0 ? bit : 0);
-    b[outputIdx + 6] = b[outputIdx + 6] | ((y1 & 64) > 0 ? bit : 0);
-    b[outputIdx + 7] = b[outputIdx + 7] | ((y1 & 128) > 0 ? bit : 0);
+    for (int x = 0; x < 8; ++x) {
+      b[outputIdx + x] = b[outputIdx + x] | ((y1 & (2^x)) > 0 ? bit : 0);
+    }
 
     y1 = (ccw ? pgm_read_byte(a[inputIdx + 16]) : reverseBits(pgm_read_byte(a[inputIdx])));
 
-    b[outputIdx + 8] = b[outputIdx + 8] | ((y1 & 1) > 0 ? bit : 0);
-    b[outputIdx + 9] = b[outputIdx + 9] | ((y1 & 2) > 0 ? bit : 0);
-    b[outputIdx + 10] = b[outputIdx + 10] | ((y1 & 4) > 0 ? bit : 0);
-    b[outputIdx + 11] = b[outputIdx + 11] | ((y1 & 8) > 0 ? bit : 0);
-    b[outputIdx + 12] = b[outputIdx + 12] | ((y1 & 16) > 0 ? bit : 0);
-    b[outputIdx + 13] = b[outputIdx + 13] | ((y1 & 32) > 0 ? bit : 0);
-    b[outputIdx + 14] = b[outputIdx + 14] | ((y1 & 64) > 0 ? bit : 0);
-    b[outputIdx + 15] = b[outputIdx + 15] | ((y1 & 128) > 0 ? bit : 0);
-
+    for (int x = 0; x < 8; ++x) {
+      b[outputIdx + 8 + x] = b[outputIdx + 8 + x] | ((y1 & (2^x)) > 0 ? bit : 0);
+    }
+    
     if (ccw) {
    
       bit = bit >> 1;
@@ -442,7 +432,7 @@ void Sprites::rotate180(const uint8_t *a, uint8_t *b) {
 
   for (uint8_t x = offset; x < 32 + offset; ++x) {
   
-    b[35 - x] = reverseBits(pgm_read_byte(a[x]));
+    b[35 - offset - x] = reverseBits(pgm_read_byte(a[x]));
 
   }
 
