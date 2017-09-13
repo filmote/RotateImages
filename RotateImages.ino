@@ -33,13 +33,13 @@ void setup() {
   
   Sprites::drawOverwriteRAM(0, 0, outImg, 0);
 
-  Sprites::rotateCCW(inpImg, outImg);
+  Sprites::rotateCCW(inpImg, outImg, sizeof(inpImg), sizeof(outImg));
   Sprites::drawOverwriteRAM(20, 0, outImg, 0);
 
-  Sprites::rotateCW(inpImg, outImg);
+  Sprites::rotateCW(inpImg, outImg, sizeof(inpImg), sizeof(outImg));
   Sprites::drawOverwriteRAM(40, 0, outImg, 0);
 
-  Sprites::rotate180(inpImg, outImg);
+  Sprites::rotate180(inpImg, outImg, sizeof(inpImg), sizeof(outImg));
   Sprites::drawOverwriteRAM(60, 0, outImg, 0);
 
 

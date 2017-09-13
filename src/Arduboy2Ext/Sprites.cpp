@@ -59,9 +59,21 @@ void Sprites::draw(int16_t x, int16_t y,
   if (bitmap == NULL)
     return;
 
-  uint8_t width = (inProgMem ? pgm_read_byte(bitmap) : bitmap[0]);
-  uint8_t height = (inProgMem ? pgm_read_byte(++bitmap) : bitmap[1]);
-  bitmap++;
+  uint8_t width = 0;
+  uint8_t height = 0;
+
+  if (inProgMem) {
+    width = pgm_read_byte(bitmap);
+    height = pgm_read_byte(++bitmap);
+  }
+  else {
+    width = *bitmap;
+    ++bitmap;
+    height = *bitmap;
+  }
+
+  ++bitmap;
+  
   if (frame > 0 || sprite_frame > 0) {
     frame_offset = (width * ( height / 8 + ( height % 8 == 0 ? 0 : 1)));
     // sprite plus mask uses twice as much space for each frame
@@ -375,29 +387,29 @@ void Sprites::drawBitmap(int16_t x, int16_t y,
   }
 }
 
-void Sprites::rotate(bool ccw, const uint8_t *a, uint8_t *b) {
+void Sprites::rotate(bool ccw, const uint8_t *a, uint8_t *b, uint8_t sizeOfA, uint8_t sizeOfB) {
 
-  uint8_t offset = (sizeof(b) == 18 ? 2 : 0);
-  
-  memset(b, 0, sizeof(b));
+  uint8_t offset = (sizeOfA == 18 ? 2 : 0);
+ 
+  memset(b, 0, sizeOfB);
 
   uint8_t bit = (ccw ? 128 : 1);
   uint8_t outputIdx = (ccw ? 16 + offset : offset);
 
   for (int inputIdx = offset; inputIdx < 16 + offset; ++inputIdx) {
   
-    uint8_t y1 =  (ccw ? pgm_read_byte(a[inputIdx]) : reverseBits(pgm_read_byte(a[inputIdx + 16])));
+    uint8_t d =  (ccw ? pgm_read_byte(a[inputIdx]) : reverseBits(pgm_read_byte(a[inputIdx + 16])));
    
     for (int x = 0; x < 8; ++x) {
-      b[outputIdx + x] = b[outputIdx + x] | ((y1 & (2^x)) > 0 ? bit : 0);
+      b[outputIdx + x] = b[outputIdx + x] | ((d & (1 << x)) > 0 ? bit : 0);
     }
 
-    y1 = (ccw ? pgm_read_byte(a[inputIdx + 16]) : reverseBits(pgm_read_byte(a[inputIdx])));
+    d = (ccw ? pgm_read_byte(a[inputIdx + 16]) : reverseBits(pgm_read_byte(a[inputIdx])));
 
     for (int x = 0; x < 8; ++x) {
-      b[outputIdx + 8 + x] = b[outputIdx + 8 + x] | ((y1 & (2^x)) > 0 ? bit : 0);
+      b[outputIdx + 8 + x] = b[outputIdx + 8 + x] | ((d & (1 << x)) > 0 ? bit : 0);
     }
-    
+  
     if (ccw) {
    
       bit = bit >> 1;
@@ -409,26 +421,28 @@ void Sprites::rotate(bool ccw, const uint8_t *a, uint8_t *b) {
     }
     else {
    
-      bit = bit << 1;
-      if (bit == 256) { 
+      if (bit < 128) { 
+        bit = bit << 1;
+      }
+	  else {
         bit = 1;
         outputIdx = outputIdx + 16;
-      }
-   
+	  }
+	  
     }
 
   }
 
 }
 
-void Sprites::rotateCCW(const uint8_t *a, uint8_t *b) { rotate(true, a, b); }
+void Sprites::rotateCCW(const uint8_t a[], uint8_t b[], uint8_t sizeOfA, uint8_t sizeOfB) { rotate(true, a, b, sizeOfA, sizeOfB); }
 
-void Sprites::rotateCW(const uint8_t *a, uint8_t *b) { rotate(false, a, b); }
+void Sprites::rotateCW(const uint8_t a[], uint8_t b[], uint8_t sizeOfA, uint8_t sizeOfB) { rotate(false, a, b, sizeOfA, sizeOfB); }
 
-void Sprites::rotate180(const uint8_t *a, uint8_t *b) {
+void Sprites::rotate180(const uint8_t a[], uint8_t b[], uint8_t sizeOfA, uint8_t sizeOfB) {
 
-  uint8_t offset = (sizeof(b) == 18 ? 2 : 0);
-  memset(b, 0, sizeof(b));
+  uint8_t offset = (sizeOfB == 18 ? 2 : 0);
+  memset(b, 0, sizeOfB);
 
   for (uint8_t x = offset; x < 32 + offset; ++x) {
   
