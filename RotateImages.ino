@@ -40,22 +40,22 @@ void setup() {
   // From array in memory ..
   
   Sprites::drawOverwriteRAM(0, 10, inpImgRAM, 0);
-  Sprites::rotateCCW(inpImgRAM, outImg, false, true);
+  Sprites::rotateCCW(inpImgRAM, outImg, false, false);
   Sprites::drawOverwriteRAM(20, 10, outImg, 0);
-  Sprites::rotateCW(inpImgRAM, outImg, false, true);
+  Sprites::rotateCW(inpImgRAM, outImg, false, false);
   Sprites::drawOverwriteRAM(40, 10, outImg, 0);
-  Sprites::rotate180(inpImgRAM, outImg, false, true);
+  Sprites::rotate180(inpImgRAM, outImg, false, false);
   Sprites::drawOverwriteRAM(60, 10, outImg, 0);
 
 
   // From PROGMEM array ..
 
   Sprites::drawOverwrite(0, 30, inpImg, 0);
-  Sprites::rotateCCW(inpImg, outImg, false, false);
+  Sprites::rotateCCW(inpImg, outImg, false, true);
   Sprites::drawOverwriteRAM(20, 30, outImg, 0);
-  Sprites::rotateCW(inpImg, outImg, false, false);
+  Sprites::rotateCW(inpImg, outImg, false, true);
   Sprites::drawOverwriteRAM(40, 30, outImg, 0);
-  Sprites::rotate180(inpImg, outImg, false, false);
+  Sprites::rotate180(inpImg, outImg, false, true);
   Sprites::drawOverwriteRAM(60, 30, outImg, 0);
 
 
