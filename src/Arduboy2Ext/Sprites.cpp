@@ -442,7 +442,7 @@ void Sprites::rotate180(const uint8_t *a, uint8_t *b, bool isMask, bool aInRam) 
 
   for (uint8_t x = offset; x < 32 + offset; ++x) {
   
-    b[(offset == 2 ? 35 : 31) - x] = reverseBits(aInRam ? a[x] : pgm_read_byte(a[x]));
+    b[(isMask ? 31 : 35) - x] = reverseBits(aInRam ? a[x] : pgm_read_byte(a[x]));
 
   }
 
