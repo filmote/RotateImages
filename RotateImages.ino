@@ -1,6 +1,11 @@
 #include "src/Arduboy2Ext/Arduboy2.h"
 #include "src/Arduboy2Ext/Sprites.h"
 
+const uint8_t inpImgRAM[] = {
+  16, 16,
+  16, 56, 56, 104, 120, 120, 254, 199, 254, 120, 120, 104, 56, 56, 16, 1,
+  0, 0, 0, 0, 32, 48, 51, 127, 51, 48, 32, 0, 0, 0, 128, 192,
+};
 
 const uint8_t PROGMEM inpImg[] = {
   16, 16,
@@ -26,40 +31,41 @@ uint8_t outImg_Mask[] = {
 
 Arduboy2 arduboy;
 
-
 void setup() {
 
-  arduboy.begin();
+  arduboy.boot();
+  arduboy.clear();
+
+
+  // From array in memory ..
   
-  Sprites::drawOverwriteRAM(0, 0, outImg, 0);
-
-  Sprites::rotateCCW(inpImg, outImg, sizeof(inpImg), sizeof(outImg));
-  Sprites::drawOverwriteRAM(20, 0, outImg, 0);
-
-  Sprites::rotateCW(inpImg, outImg, sizeof(inpImg), sizeof(outImg));
-  Sprites::drawOverwriteRAM(40, 0, outImg, 0);
-
-  Sprites::rotate180(inpImg, outImg, sizeof(inpImg), sizeof(outImg));
-  Sprites::drawOverwriteRAM(60, 0, outImg, 0);
+  Sprites::drawOverwriteRAM(0, 10, inpImgRAM, 0);
+  Sprites::rotateCCW(inpImgRAM, outImg, false, true);
+  Sprites::drawOverwriteRAM(20, 10, outImg, 0);
+  Sprites::rotateCW(inpImgRAM, outImg, false, true);
+  Sprites::drawOverwriteRAM(40, 10, outImg, 0);
+  Sprites::rotate180(inpImgRAM, outImg, false, true);
+  Sprites::drawOverwriteRAM(60, 10, outImg, 0);
 
 
-  // Echo out rotated image array ..
-  /*
-  for (int x = 2; x< 18; ++x) {
-    Serial.print(outImg[x]);
-    Serial.print(" ");
-  }
-  Serial.println("");
+  // From PROGMEM array ..
 
-  for (int x = 18; x< 34; ++x) {
-    Serial.print(outImg[x]);
-    Serial.print(" ");
-  }
-  Serial.println("");
-  */
+  Sprites::drawOverwrite(0, 30, inpImg, 0);
+  Sprites::rotateCCW(inpImg, outImg, false, false);
+  Sprites::drawOverwriteRAM(20, 30, outImg, 0);
+  Sprites::rotateCW(inpImg, outImg, false, false);
+  Sprites::drawOverwriteRAM(40, 30, outImg, 0);
+  Sprites::rotate180(inpImg, outImg, false, false);
+  Sprites::drawOverwriteRAM(60, 30, outImg, 0);
+
+
+  arduboy.display();
+
 }
 
-void loop() { }
+void loop() { 
+
+}
 
 
 

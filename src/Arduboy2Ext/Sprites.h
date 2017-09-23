@@ -241,11 +241,14 @@ class Sprites
                            uint8_t w, uint8_t h, uint8_t draw_mode, bool inProgMem);
 
 
-	static void rotate(bool ccw, const uint8_t *a, uint8_t *b, uint8_t sizeOfA, uint8_t sizeOfB);
-	static void rotateCCW(const uint8_t *a, uint8_t *b, uint8_t sizeOfA, uint8_t sizeOfB);
-	static void rotateCW(const uint8_t *a, uint8_t *b, uint8_t sizeOfA, uint8_t sizeOfB);
-	static void rotate180(const uint8_t *a, uint8_t *b, uint8_t sizeOfA, uint8_t sizeOfB);
+	static void rotate(bool ccw, const uint8_t *a, uint8_t *b, bool isMask, bool aInRam);
+	static void rotateCCW(const uint8_t *a, uint8_t *b, bool isMask, bool aInRam);
+	static void rotateCW(const uint8_t *a, uint8_t *b, bool isMask, bool aInRam);
+	static void rotate180(const uint8_t *a, uint8_t *b, bool isMask, bool aInRam);
 
+  static int16_t getWidth(const uint8_t *a, bool inProgMem);
+  static int16_t getHeight(const uint8_t *a, bool inProgMem);
+  
 };
 
 #endif
