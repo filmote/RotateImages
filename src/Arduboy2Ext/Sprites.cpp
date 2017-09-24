@@ -396,13 +396,13 @@ void Sprites::rotate(bool ccw, const uint8_t *a, uint8_t *b, bool isMask, bool i
 
   for (uint8_t inputIdx = offset; inputIdx < 16 + offset; ++inputIdx) {
   
-    uint8_t y1 = (ccw ? (inProgMem ? pgm_read_byte(a[inputIdx]): a[inputIdx]) : reverseBits(inProgMem ? pgm_read_byte(a[inputIdx + 16]) : a[inputIdx + 16]));
+    uint8_t y1 = (ccw ? (inProgMem ? pgm_read_byte(&a[inputIdx]): a[inputIdx]) : reverseBits(inProgMem ? pgm_read_byte(&a[inputIdx + 16]) : a[inputIdx + 16]));
 
     for (uint8_t x = 0; x < 8; ++x) {
       b[outputIdx + x] = b[outputIdx + x] | ((y1 & (1 << x)) > 0 ? bit : 0);
     }
 
-    y1 = (ccw ? (inProgMem ? pgm_read_byte(a[inputIdx + 16]): a[inputIdx + 16]) : reverseBits(inProgMem ? pgm_read_byte(a[inputIdx]) : a[inputIdx]));
+    y1 = (ccw ? (inProgMem ? pgm_read_byte(&a[inputIdx + 16]): a[inputIdx + 16]) : reverseBits(inProgMem ? pgm_read_byte(&a[inputIdx]) : a[inputIdx]));
     
     for (uint8_t x = 0; x < 8; ++x) {
       b[outputIdx + 8 + x] = b[outputIdx + 8 + x] | ((y1 & (1 << x)) > 0 ? bit : 0);
@@ -442,7 +442,7 @@ void Sprites::rotate180(const uint8_t *a, uint8_t *b, bool isMask, bool inProgMe
 
   for (uint8_t x = offset; x < 32 + offset; ++x) {
   
-    b[(isMask ? 31 : 35) - x] = reverseBits(inProgMem ? pgm_read_byte(a[x]) : a[x]);
+    b[(isMask ? 31 : 35) - x] = reverseBits(inProgMem ? pgm_read_byte(&a[x]) : a[x]);
 
   }
 
