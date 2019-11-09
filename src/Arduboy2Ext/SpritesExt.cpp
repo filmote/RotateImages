@@ -1,67 +1,61 @@
-/**
- * @file Sprites.cpp
- * \brief
- * A class for drawing animated sprites from image and mask bitmaps.
- */
-
-#include "Sprites.h"
+#include "SpritesExt.h"
 
 #define reverseBits(b) (((b)&1?128:0)|((b)&2?64:0)|((b)&4?32:0)|((b)&8?16:0)|((b)&16?8:0)|((b)&32?4:0)|((b)&64?2:0)|((b)&128?1:0))
 
+SpritesExt::SpritesExt() { }
 
-void Sprites::drawExternalMask(int16_t x, int16_t y, const uint8_t *bitmap,
-                               const uint8_t *mask, uint8_t frame, uint8_t mask_frame) {
-  draw(x, y, bitmap, frame, mask, mask_frame, SPRITE_MASKED, true);
-}
-
-void Sprites::drawOverwrite(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
-  draw(x, y, bitmap, frame, NULL, 0, SPRITE_OVERWRITE, true);
-}
-
-void Sprites::drawErase(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
-  draw(x, y, bitmap, frame, NULL, 0, SPRITE_IS_MASK_ERASE, true);
-}
-
-void Sprites::drawSelfMasked(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
-  draw(x, y, bitmap, frame, NULL, 0, SPRITE_IS_MASK, true);
-}
-
-void Sprites::drawPlusMask(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
-  draw(x, y, bitmap, frame, NULL, 0, SPRITE_PLUS_MASK, true);
-}
-
-void Sprites::drawExternalMaskRAM(int16_t x, int16_t y, const uint8_t *bitmap,
-                                  const uint8_t *mask, uint8_t frame, uint8_t mask_frame) {
-  draw(x, y, bitmap, frame, mask, mask_frame, SPRITE_MASKED, false);
-}
-
-void Sprites::drawOverwriteRAM(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
-  draw(x, y, bitmap, frame, NULL, 0, SPRITE_OVERWRITE, false);
-}
-
-void Sprites::drawEraseRAM(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
-  draw(x, y, bitmap, frame, NULL, 0, SPRITE_IS_MASK_ERASE, false);
-}
-
-void Sprites::drawSelfMaskedRAM(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
-  draw(x, y, bitmap, frame, NULL, 0, SPRITE_IS_MASK, false);
-}
-
-int16_t Sprites::getWidth(const uint8_t *bitmap, bool inProgMem) {
+int16_t SpritesExt::getWidth(const uint8_t *bitmap, bool inProgMem) {
   return (inProgMem ? pgm_read_byte(bitmap) : *bitmap);
 }
-int16_t Sprites::getHeight(const uint8_t *bitmap, bool inProgMem) {
+
+int16_t SpritesExt::getHeight(const uint8_t *bitmap, bool inProgMem) {
   ++bitmap;
   return (inProgMem ? pgm_read_byte(bitmap) : *bitmap);
 }
 
+void SpritesExt::drawExternalMask(int16_t x, int16_t y, const uint8_t *bitmap, const uint8_t *mask, uint8_t frame, uint8_t mask_frame) {
+  draw(x, y, bitmap, frame, mask, mask_frame, SPRITE_MASKED, true);
+}
+
+void SpritesExt::drawOverwrite(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
+  draw(x, y, bitmap, frame, NULL, 0, SPRITE_OVERWRITE, true);
+}
+
+void SpritesExt::drawErase(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
+  draw(x, y, bitmap, frame, NULL, 0, SPRITE_IS_MASK_ERASE, true);
+}
+
+void SpritesExt::drawSelfMasked(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
+  draw(x, y, bitmap, frame, NULL, 0, SPRITE_IS_MASK, true);
+}
+
+void SpritesExt::drawPlusMask(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
+  draw(x, y, bitmap, frame, NULL, 0, SPRITE_PLUS_MASK, true);
+}
+
+void SpritesExt::drawExternalMaskRAM(int16_t x, int16_t y, const uint8_t *bitmap, const uint8_t *mask, uint8_t frame, uint8_t mask_frame) {
+  draw(x, y, bitmap, frame, mask, mask_frame, SPRITE_MASKED, false);
+}
+
+void SpritesExt::drawOverwriteRAM(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
+  draw(x, y, bitmap, frame, NULL, 0, SPRITE_OVERWRITE, false);
+}
+
+void SpritesExt::drawEraseRAM(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
+  draw(x, y, bitmap, frame, NULL, 0, SPRITE_IS_MASK_ERASE, false);
+}
+
+void SpritesExt::drawSelfMaskedRAM(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
+  draw(x, y, bitmap, frame, NULL, 0, SPRITE_IS_MASK, false);
+}
+
 
 //common functions
-void Sprites::draw(int16_t x, int16_t y,
+void SpritesExt::draw(int16_t x, int16_t y,
                    const uint8_t *bitmap, uint8_t frame,
                    const uint8_t *mask, uint8_t sprite_frame,
-                   uint8_t drawMode, bool inProgMem)
-{
+                   uint8_t drawMode, bool inProgMem) {
+                     
   unsigned int frame_offset;
 
   if (bitmap == NULL)
@@ -92,7 +86,7 @@ void Sprites::draw(int16_t x, int16_t y,
   drawBitmap(x, y, bitmap, mask, width, height, drawMode, inProgMem);
 }
 
-void Sprites::drawBitmap(int16_t x, int16_t y,
+void SpritesExt::drawBitmap(int16_t x, int16_t y,
                          const uint8_t *bitmap, const uint8_t *mask,
                          uint8_t w, uint8_t h, uint8_t draw_mode, bool inProgMem)
 {
@@ -385,7 +379,7 @@ void Sprites::drawBitmap(int16_t x, int16_t y,
   }
 }
 
-void Sprites::rotate(bool ccw, const uint8_t *a, uint8_t *b, bool isMask, bool inProgMem) {
+void SpritesExt::rotate(bool ccw, const uint8_t *a, uint8_t *b, bool isMask, bool inProgMem) {
   
   uint8_t offset = (isMask ? 0 : 2);
   
@@ -431,11 +425,11 @@ void Sprites::rotate(bool ccw, const uint8_t *a, uint8_t *b, bool isMask, bool i
 
 }
 
-void Sprites::rotateCCW(const uint8_t *a, uint8_t *b, bool isMask, bool inProgMem) { rotate(true, a, b, isMask, inProgMem); }
+void SpritesExt::rotateCCW(const uint8_t *a, uint8_t *b, bool isMask, bool inProgMem) { rotate(true, a, b, isMask, inProgMem); }
 
-void Sprites::rotateCW(const uint8_t *a, uint8_t *b, bool isMask, bool inProgMem) { rotate(false, a, b, isMask, inProgMem); }
+void SpritesExt::rotateCW(const uint8_t *a, uint8_t *b, bool isMask, bool inProgMem) { rotate(false, a, b, isMask, inProgMem); }
 
-void Sprites::rotate180(const uint8_t *a, uint8_t *b, bool isMask, bool inProgMem) {
+void SpritesExt::rotate180(const uint8_t *a, uint8_t *b, bool isMask, bool inProgMem) {
 
   uint8_t offset = (isMask ? 0 : 2);
   memset(b + offset, 0, 32);

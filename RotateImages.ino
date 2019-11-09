@@ -1,5 +1,5 @@
-#include "src/Arduboy2Ext/Arduboy2.h"
-#include "src/Arduboy2Ext/Sprites.h"
+#include <Arduboy2.h>
+#include "src/Arduboy2Ext/SpritesExt.h"
 
 const uint8_t inpImgRAM[] = {
   16, 16,
@@ -30,6 +30,7 @@ uint8_t outImg_Mask[] = {
 };
 
 
+//Arduboy2Ext arduboy;
 Arduboy2 arduboy;
 
 void setup() {
@@ -46,38 +47,38 @@ void setup() {
 
   // From array in memory ..
   
-  Sprites::drawOverwriteRAM(0, 0, inpImgRAM, 0);
-  Sprites::rotateCCW(inpImgRAM, outImg, false, false);
-  Sprites::drawOverwriteRAM(20, 0, outImg, 0);
-  Sprites::rotateCW(inpImgRAM, outImg, false, false);
-  Sprites::drawOverwriteRAM(40, 0, outImg, 0);
-  Sprites::rotate180(inpImgRAM, outImg, false, false);
-  Sprites::drawOverwriteRAM(60, 0, outImg, 0);
+  SpritesExt::drawOverwriteRAM(0, 0, inpImgRAM, 0);
+  SpritesExt::rotateCCW(inpImgRAM, outImg, false, false);
+  SpritesExt::drawOverwriteRAM(20, 0, outImg, 0);
+  SpritesExt::rotateCW(inpImgRAM, outImg, false, false);
+  SpritesExt::drawOverwriteRAM(40, 0, outImg, 0);
+  SpritesExt::rotate180(inpImgRAM, outImg, false, false);
+  SpritesExt::drawOverwriteRAM(60, 0, outImg, 0);
 
 
   // From PROGMEM array ..
 
-  Sprites::drawOverwrite(0, 20, inpImg, 0);
-  Sprites::rotateCCW(inpImg, outImg, false, true);
-  Sprites::drawOverwriteRAM(20, 20, outImg, 0);
-  Sprites::rotateCW(inpImg, outImg, false, true);
-  Sprites::drawOverwriteRAM(40, 20, outImg, 0);
-  Sprites::rotate180(inpImg, outImg, false, true);
-  Sprites::drawOverwriteRAM(60, 20, outImg, 0);
+  SpritesExt::drawOverwrite(0, 20, inpImg, 0);
+  SpritesExt::rotateCCW(inpImg, outImg, false, true);
+  SpritesExt::drawOverwriteRAM(20, 20, outImg, 0);
+  SpritesExt::rotateCW(inpImg, outImg, false, true);
+  SpritesExt::drawOverwriteRAM(40, 20, outImg, 0);
+  SpritesExt::rotate180(inpImg, outImg, false, true);
+  SpritesExt::drawOverwriteRAM(60, 20, outImg, 0);
 
 
   // From PROGMEM array ..
 
-  Sprites::drawExternalMask(0, 40, inpImg, inpImg_Mask, 0, 0);
-  Sprites::rotateCCW(inpImg, outImg, false, true);
-  Sprites::rotateCCW(inpImg_Mask, outImg_Mask, true, true);
-  Sprites::drawExternalMaskRAM(20, 40, outImg, outImg_Mask, 0, 0);
-  Sprites::rotateCW(inpImg, outImg, false, true);
-  Sprites::rotateCW(inpImg_Mask, outImg_Mask, true, true);
-  Sprites::drawExternalMaskRAM(40, 40, outImg, outImg_Mask, 0, 0);
-  Sprites::rotate180(inpImg, outImg, false, true);
-  Sprites::rotate180(inpImg_Mask, outImg_Mask, true, true);
-  Sprites::drawExternalMaskRAM(60, 40, outImg, outImg_Mask, 0, 0);
+  SpritesExt::drawExternalMask(0, 40, inpImg, inpImg_Mask, 0, 0);
+  SpritesExt::rotateCCW(inpImg, outImg, false, true);
+  SpritesExt::rotateCCW(inpImg_Mask, outImg_Mask, true, true);
+  SpritesExt::drawExternalMaskRAM(20, 40, outImg, outImg_Mask, 0, 0);
+  SpritesExt::rotateCW(inpImg, outImg, false, true);
+  SpritesExt::rotateCW(inpImg_Mask, outImg_Mask, true, true);
+  SpritesExt::drawExternalMaskRAM(40, 40, outImg, outImg_Mask, 0, 0);
+  SpritesExt::rotate180(inpImg, outImg, false, true);
+  SpritesExt::rotate180(inpImg_Mask, outImg_Mask, true, true);
+  SpritesExt::drawExternalMaskRAM(60, 40, outImg, outImg_Mask, 0, 0);
 
   arduboy.display();
 
