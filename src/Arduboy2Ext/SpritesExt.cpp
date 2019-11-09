@@ -13,40 +13,40 @@ int16_t SpritesExt::getHeight(const uint8_t *bitmap, bool inProgMem) {
   return (inProgMem ? pgm_read_byte(bitmap) : *bitmap);
 }
 
-void SpritesExt::drawExternalMask(int16_t x, int16_t y, const uint8_t *bitmap, const uint8_t *mask, uint8_t frame, uint8_t mask_frame) {
-  draw(x, y, bitmap, frame, mask, mask_frame, SPRITE_MASKED, true);
+void SpritesExt::drawExternalMask(int16_t x, int16_t y, const uint8_t *bitmap, const uint8_t *mask, uint8_t frame, uint8_t mask_frame, bool flipHoriz) {
+  draw(x, y, bitmap, frame, mask, mask_frame, SPRITE_MASKED, true, flipHoriz);
 }
 
-void SpritesExt::drawOverwrite(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
-  draw(x, y, bitmap, frame, NULL, 0, SPRITE_OVERWRITE, true);
+void SpritesExt::drawOverwrite(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame, bool flipHoriz) {
+  draw(x, y, bitmap, frame, NULL, 0, SPRITE_OVERWRITE, true, flipHoriz);
 }
 
-void SpritesExt::drawErase(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
-  draw(x, y, bitmap, frame, NULL, 0, SPRITE_IS_MASK_ERASE, true);
+void SpritesExt::drawErase(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame, bool flipHoriz) {
+  draw(x, y, bitmap, frame, NULL, 0, SPRITE_IS_MASK_ERASE, true, flipHoriz);
 }
 
-void SpritesExt::drawSelfMasked(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
-  draw(x, y, bitmap, frame, NULL, 0, SPRITE_IS_MASK, true);
+void SpritesExt::drawSelfMasked(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame, bool flipHoriz) {
+  draw(x, y, bitmap, frame, NULL, 0, SPRITE_IS_MASK, true, flipHoriz);
 }
 
-void SpritesExt::drawPlusMask(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
-  draw(x, y, bitmap, frame, NULL, 0, SPRITE_PLUS_MASK, true);
+void SpritesExt::drawPlusMask(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame, bool flipHoriz) {
+  draw(x, y, bitmap, frame, NULL, 0, SPRITE_PLUS_MASK, true, flipHoriz);
 }
 
-void SpritesExt::drawExternalMaskRAM(int16_t x, int16_t y, const uint8_t *bitmap, const uint8_t *mask, uint8_t frame, uint8_t mask_frame) {
-  draw(x, y, bitmap, frame, mask, mask_frame, SPRITE_MASKED, false);
+void SpritesExt::drawExternalMaskRAM(int16_t x, int16_t y, const uint8_t *bitmap, const uint8_t *mask, uint8_t frame, uint8_t mask_frame, bool flipHoriz) {
+  draw(x, y, bitmap, frame, mask, mask_frame, SPRITE_MASKED, false, flipHoriz);
 }
 
-void SpritesExt::drawOverwriteRAM(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
-  draw(x, y, bitmap, frame, NULL, 0, SPRITE_OVERWRITE, false);
+void SpritesExt::drawOverwriteRAM(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame, bool flipHoriz) {
+  draw(x, y, bitmap, frame, NULL, 0, SPRITE_OVERWRITE, false, flipHoriz);
 }
 
-void SpritesExt::drawEraseRAM(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
-  draw(x, y, bitmap, frame, NULL, 0, SPRITE_IS_MASK_ERASE, false);
+void SpritesExt::drawEraseRAM(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame, bool flipHoriz) {
+  draw(x, y, bitmap, frame, NULL, 0, SPRITE_IS_MASK_ERASE, false, flipHoriz);
 }
 
-void SpritesExt::drawSelfMaskedRAM(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame) {
-  draw(x, y, bitmap, frame, NULL, 0, SPRITE_IS_MASK, false);
+void SpritesExt::drawSelfMaskedRAM(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t frame, bool flipHoriz) {
+  draw(x, y, bitmap, frame, NULL, 0, SPRITE_IS_MASK, false, flipHoriz);
 }
 
 
@@ -54,7 +54,7 @@ void SpritesExt::drawSelfMaskedRAM(int16_t x, int16_t y, const uint8_t *bitmap, 
 void SpritesExt::draw(int16_t x, int16_t y,
                    const uint8_t *bitmap, uint8_t frame,
                    const uint8_t *mask, uint8_t sprite_frame,
-                   uint8_t drawMode, bool inProgMem) {
+                   uint8_t drawMode, bool inProgMem, bool flipHoriz) {
                      
   unsigned int frame_offset;
 
@@ -83,12 +83,12 @@ void SpritesExt::draw(int16_t x, int16_t y,
     drawMode = mask == NULL ? SPRITE_UNMASKED : SPRITE_MASKED;
   }
 
-  drawBitmap(x, y, bitmap, mask, width, height, drawMode, inProgMem);
+  drawBitmap(x, y, bitmap, mask, width, height, drawMode, inProgMem, flipHoriz);
 }
 
 void SpritesExt::drawBitmap(int16_t x, int16_t y,
                          const uint8_t *bitmap, const uint8_t *mask,
-                         uint8_t w, uint8_t h, uint8_t draw_mode, bool inProgMem)
+                         uint8_t w, uint8_t h, uint8_t draw_mode, bool inProgMem, bool flipHoriz)
 {
   // no need to draw at all of we're offscreen
   if (x + w <= 0 || x > WIDTH - 1 || y + h <= 0 || y > HEIGHT - 1)
@@ -142,8 +142,20 @@ void SpritesExt::drawBitmap(int16_t x, int16_t y,
   loop_h -= start_h;
 
   sRow += start_h;
+
   ofs = (sRow * WIDTH) + x + xOffset;
-  uint8_t *bofs = (uint8_t *)bitmap + (start_h * w) + xOffset;
+
+  uint8_t *bofs = 0;
+uint16_t xxx = 0;
+
+  if (!flipHoriz) {
+    bofs = (uint8_t *)bitmap + (start_h * w) + xOffset;
+  }
+  else {
+    bofs = (uint8_t *)bitmap + (start_h * w) + w + xOffset - 1;
+    xxx = (start_h * w) + w + xOffset - 1;
+  }
+
   uint8_t data;
 
   uint8_t mul_amt = 1 << yOffset;
@@ -173,11 +185,25 @@ void SpritesExt::drawBitmap(int16_t x, int16_t y,
             data |= (*((unsigned char *) (&bitmap_data) + 1));
             Arduboy2Base::sBuffer[ofs + WIDTH] = data;
           }
+
           ofs++;
-          bofs++;
+          if (!flipHoriz) {
+            bofs++;
+          }
+          else {
+            bofs--;
+            xxx--;
+            Serial.println(xxx);
+          }
         }
         sRow++;
-        bofs += w - rendered_width;
+        if (!flipHoriz) {
+          bofs += w - rendered_width;
+        }
+        else {
+          bofs += w + w - rendered_width;
+        }
+
         ofs += WIDTH - rendered_width;
       }
       break;
